@@ -112,7 +112,7 @@ func adminUpdatePickupHandler(w http.ResponseWriter, r *http.Request) {
 	// データベースの関数を呼び出して、指定したキャラクターをピックアップに設定
 	err := changePickupCharacter(rarity, targetNames)
 	if err != nil {
-		http.Error(w, "ピックアップキャラクターの更新に失敗しました", http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
