@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http" // HTTPサーバーの構築に使用
 	"strconv"
+	"strings"
 )
 
 const PASSWORD = "Bearer supersecret"
@@ -101,10 +102,15 @@ func adminUpdatePickupHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// URLから変更したいキャラクターの名前を取得（例: ?name=アテナ）
-	targetNames := r.URL.Query()["name"]
+	targetNamesStr := r.URL.Query().Get("name")
+	if targetNamesStr == "" {
+		http.Error(w, "nameを指定してください。 例: ?rarity=星5&name=アテナ", http.StatusBadRequest)
+		return
+	}
+	targetNames := strings.Split(targetNamesStr, ",")
 	for i := range targetNames {
 		if targetNames[i] == "" {
-			http.Error(w, "ピックアップにするキャラクター名(name)を指定してください", http.StatusBadRequest)
+			http.Error(w, "nameを指定してください。 例: ?rarity=星5&name=アテナ", http.StatusBadRequest)
 			return
 		}
 	}
