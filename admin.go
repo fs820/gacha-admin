@@ -69,7 +69,7 @@ func adminAddStonesHandler(w http.ResponseWriter, r *http.Request) {
 	// 石を追加
 	err = addStones(targetUID, amount)
 	if err != nil {
-		http.Error(w, "石の追加に失敗しました", http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
