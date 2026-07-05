@@ -127,6 +127,28 @@ func cleanupHistory() error {
 	return err
 }
 
+// DBから現在のキャラクターの配列を取得する関数
+func getCharacters() []Character {
+	var chars []Character
+
+	// DBから検索
+	rows, err := userDB.Query("SELECT name, rarity, is_pickup FROM characters")
+	if err != nil {
+		log.Println("キャラクター取得エラー:", err)
+		return chars
+	}
+	defer rows.Close()
+
+	// 取得したデータを構造体に格納
+	for rows.Next() {
+		var char Character
+		rows.Scan(&char.Name, &char.Rarity, &char.IsPickup)
+		chars = append(chars, char)
+	}
+
+	return chars
+}
+
 // 指定したキャラクターをピックアップに設定する関数
 func changePickupCharacter(rarity string, targetNames []string) error {
 	// トランザクション開始

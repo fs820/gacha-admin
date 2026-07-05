@@ -2,11 +2,19 @@ package main // エントリーポイント
 
 // ライブラリのインポート
 import (
+	"encoding/json"
 	"fmt"
 	"net/http" // HTTPサーバーの構築に使用
 	"strconv"
 	"strings"
 )
+
+// キャラクター情報を表す構造体
+type Character struct {
+	Name     string `json:"name"`
+	Rarity   string `json:"rarity"`
+	IsPickup bool   `json:"isPickup"`
+}
 
 const PASSWORD = "Bearer supersecret"
 
@@ -126,4 +134,27 @@ func adminUpdatePickupHandler(w http.ResponseWriter, r *http.Request) {
 	for _, name := range targetNames {
 		w.Write([]byte(fmt.Sprintf("%sピックアップキャラクターを [%s] に更新しました！\n", rarity, name)))
 	}
+}
+
+// 管理者専用：キャラクター情報を取得するエンドポイント
+func adminGetCharacterHandler(w http.ResponseWriter, r *http.Request) {
+	// POSTリクエストのみ
+	if r.Method != http.MethodPost {
+		http.Error(w, "許可されていないリクエスト方法です (Method Not Allowed)", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// パスワードチェック
+	authHeader := r.Header.Get("Authorization")
+	if authHeader != PASSWORD {
+		http.Error(w, "権限がありません (Unauthorized)", http.StatusUnauthorized)
+		return
+	}
+
+	// データベースの関数を呼び出して、指定したキャラクターの情報を取得
+	characters := getCharacters()
+
+	// JSON形式でレスポンスを返す
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(characters)
 }

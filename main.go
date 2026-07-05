@@ -28,6 +28,7 @@ func main() {
 	http.HandleFunc("/admin/delete_history", adminDeleteHistoryHandler)
 	http.HandleFunc("/admin/add_stones", adminAddStonesHandler)
 	http.HandleFunc("/admin/update_pickup", adminUpdatePickupHandler)
+	http.HandleFunc("/admin/get_character", adminGetCharacterHandler)
 
 	// サーバー起動のメッセージを表示
 	fmt.Println("サーバーを起動しました！ ブラウザで http://localhost:8081 にアクセスしてください。")
