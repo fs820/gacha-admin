@@ -66,6 +66,15 @@ window.onload = async function() {
     setupCheckboxLimit()
 }
 
+// ページ切り替え
+function showPage(id) {
+    document.querySelectorAll(".page").forEach(page => {
+        page.style.display = "none";
+    });
+
+    document.getElementById(id).style.display = "block";
+}
+
 // チェックボックスの制限を設定
 function setupCheckboxLimit() {
     // 星4
