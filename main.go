@@ -27,6 +27,7 @@ func main() {
 	// 管理者用エンドポイント
 	http.HandleFunc("/admin/delete_history", adminDeleteHistoryHandler)
 	http.HandleFunc("/admin/add_stones", adminAddStonesHandler)
+	http.HandleFunc("/admin/insert_character", adminInsertCharacterHandler)
 	http.HandleFunc("/admin/update_pickup", adminUpdatePickupHandler)
 	http.HandleFunc("/admin/get_character", adminGetCharacterHandler)
 

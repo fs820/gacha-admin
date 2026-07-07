@@ -149,6 +149,13 @@ func getCharacters() []Character {
 	return chars
 }
 
+// 新しいキャラクターをDBに挿入する関数
+func insertCharacter(Character Character) error {
+	_, err := userDB.Exec("INSERT INTO characters (name, rarity, is_pickup) VALUES ($1, $2, $3)",
+		Character.Name, Character.Rarity, Character.IsPickup)
+	return err
+}
+
 // 指定したキャラクターをピックアップに設定する関数
 func changePickupCharacter(rarity string, targetNames []string) error {
 	// トランザクション開始

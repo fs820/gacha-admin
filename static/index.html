@@ -10,6 +10,7 @@
     
     <div class="tabs">
         <button onclick="showPage('pickup')">ピックアップ変更</button>
+        <button onclick="showPage('character')">キャラクター追加</button>
         <button onclick="showPage('stone')">石の付与</button>
         <button onclick="showPage('history')">ガチャ履歴削除</button>
     </div>
@@ -19,6 +20,17 @@
         <div id="checkboxContainer_star5"></div>
         <div id="checkboxContainer_star4"></div>
         <button id="submitButton">決定</button>
+    </div>
+
+    <div id="character" class="page" style="display:none;">
+        <h3>キャラクター追加</h3>
+        <input type="text" id="charName" placeholder="キャラクター名">
+        <select id="charRarity">
+            <option value="星4">星4</option>
+            <option value="星5">星5</option>
+        </select>
+        <br><br>
+        <button onclick="insertCharacter()">追加</button>
     </div>
 
     <div id="stone" class="page" style="display:none;">

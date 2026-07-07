@@ -126,6 +126,30 @@ document.getElementById("submitButton").addEventListener("click", () => {
     }
 });
 
+async function insertCharacter() {
+    const name = document.getElementById("charName").value;
+    const rarity = document.getElementById("charRarity").value;
+
+    if (!name || !rarity) {
+        alert("すべてのフィールドを入力してください");
+        return;
+    }
+
+    try {
+        const response = await fetch(`/admin/insert_character?name=${encodeURIComponent(name)}&rarity=${encodeURIComponent(rarity)}`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer supersecret`,
+            }
+        });
+        const text = await response.text();
+        alert(text);
+    }
+    catch (error) {
+        alert("通信エラーが発生しました");
+    }
+}
+
 // ピックアップ変更
 async function changePickUp(rarity, names) {
     try {
