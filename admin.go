@@ -87,6 +87,52 @@ func adminAddStonesHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(fmt.Sprintf("ユーザー[%s]に石を%d個追加しました！", targetUID, amount)))
 }
 
+// 管理者専用：キャラクター情報を追加するエンドポイント
+func adminInsertCharacterHandler(w http.ResponseWriter, r *http.Request) {
+	// POSTリクエストのみ
+	if r.Method != http.MethodPost {
+		http.Error(w, "許可されていないリクエスト方法です (Method Not Allowed)", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// パスワードチェック
+	authHeader := r.Header.Get("Authorization")
+	if authHeader != PASSWORD {
+		http.Error(w, "権限がありません (Unauthorized)", http.StatusUnauthorized)
+		return
+	}
+
+	// URLから変更したいキャラクターの名前を取得（例: ?name=アテナ）
+	targetNamesStr := r.URL.Query().Get("name")
+	if targetNamesStr == "" {
+		http.Error(w, "nameを指定してください。 例: ?rarity=星5&name=アテナ", http.StatusBadRequest)
+		return
+	}
+
+	// URLから変更したいレアリティを取得（例: ?rarity=星5）
+	rarity := r.URL.Query().Get("rarity")
+	if rarity == "" {
+		http.Error(w, "rarityを指定してください。 例: ?rarity=星5&name=アテナ", http.StatusBadRequest)
+		return
+	}
+
+	// 新しいキャラクター情報を作成
+	newCharacter := Character{
+		Name:   targetNamesStr,
+		Rarity: rarity,
+	}
+
+	// データベースの関数を呼び出して、指定したキャラクターを挿入
+	err := insertCharacter(newCharacter)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Write([]byte("キャラクターが正常に追加されました！"))
+}
+
 // 管理者専用：ピックアップキャラクターを変更するエンドポイント
 func adminUpdatePickupHandler(w http.ResponseWriter, r *http.Request) {
 	// POSTリクエストのみ
